@@ -68,7 +68,7 @@ $(document).ready(function() {
     // =================================================================
     // !! สำคัญ !! นำ URL ของ GOOGLE APPS SCRIPT มาวางที่นี่
     // =================================================================
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzLsNQJxFbHbOeCNP88IqVO6MG_1qt4oSi6BmDgQ16nZPQE5HjGbbAscXHx64cVQKS-/exec'; 
+    const WEB_APP_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; 
 
     // --- ส่วนข้อมูล (สามารถเพิ่ม-แก้ไขรายชื่อนิสิตได้ตรงนี้) ---
     let currentInstructor = '';
@@ -90,7 +90,7 @@ $(document).ready(function() {
             $(`#${pageId}`).removeClass('hidden');
         }
     }
-
+    
     // --- ส่วนจัดการการ Login/Logout ---
     $('#login-btn').prop('disabled', true);
     $('#instructor-select').on('change', function() {
@@ -108,7 +108,7 @@ $(document).ready(function() {
         $('#instructor-select').val('');
         showPage('login-page');
     });
-
+    
     $('#goto-dis').on('click', function() {
         generateStudentCards();
         showPage('dis-grading-page');
@@ -124,19 +124,20 @@ $(document).ready(function() {
         container.empty();
         students.forEach(student => {
             const cardHtml = `
-                <div id="student-<span class="math-inline">\{student\.id\}" class\="student\-card bg\-white rounded\-xl shadow\-md p\-6 mb\-6 border border\-gray\-200"\>
-                <div class="flex justify-between items-center mb-4">
-<div>
-<h3 class="text-xl font-bold text-gray-800">{student.id} - ${student.name}</h3>
-<span class="status-badge text-sm font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">ยังไม่ได้ประเมิน</span>
-</div>
-</div>
-<div class="border-b border-gray-200 mb-4">
-<nav class="flex flex-wrap space-x-4" aria-label="Tabs">
-${[1,2,3,4].map(i => <button class="tab-button ${i===1 ? 'active-tab' : 'inactive-tab'} px-3 py-2 font-medium text-sm rounded-t-lg" data-student-id="${student.id}" data-tab="${i}">คำถามที่ ${i}</button>).join('')}
-</nav>
-</div>
-        ${[1,2,3,4].map(i => `
+                <div id="student-${student.id}" class="student-card bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">${student.id} - ${student.name}</h3>
+                            <span class="status-badge text-sm font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">ยังไม่ได้ประเมิน</span>
+                        </div>
+                    </div>
+                    <div class="border-b border-gray-200 mb-4">
+                        <nav class="flex flex-wrap space-x-4" aria-label="Tabs">
+                            ${[1,2,3,4].map(i => `<button class="tab-button ${i===1 ? 'active-tab' : 'inactive-tab'} px-3 py-2 font-medium text-sm rounded-t-lg" data-student-id="${student.id}" data-tab="${i}">คำถามที่ ${i}</button>`).join('')}
+                        </nav>
+                    </div>
+                    
+                    ${[1,2,3,4].map(i => `
                     <div id="tab-content-${student.id}-${i}" class="tab-content space-y-4 ${i!==1 ? 'hidden':''}" data-student-id="${student.id}">
                          <p class="text-sm text-gray-500 font-semibold">เกณฑ์การให้คะแนน คำถามที่ ${i}</p>
                          ${createCriteriaHtml(student.id, i)}
@@ -146,22 +147,23 @@ ${[1,2,3,4].map(i => <button class="tab-button ${i===1 ? 'active-tab' : 'inactiv
                         <div class="flex space-x-4 sm:space-x-6 items-baseline">
                             <div class="text-center">
                                 <span class="text-sm text-gray-500">คะแนนรวม (คำถามนี้)</span>
-                                <p id="q-total-<span class="math-inline">\{student\.id\}" class\="text\-2xl font\-bold text\-indigo\-600"\>0 / 20</p\>
-                                </div>
-<div class="text-center">
-<span class="text-sm text-gray-500">คะแนนเฉลี่ย (ทั้งหมด)</span>
-<p id="avg-total-{student.id}" class="text-2xl font-bold text-green-600">0.00 / 20</p>
-</div>
-</div>
-<button class="save-student-btn w-full sm:w-auto px-6 py-3 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700" data-student-id="student.id"data−student−name="{student.name}">
-💾 บันทึกคะแนนนิสิตคนนี้
-</button>
-</div>
-</div>`;
-container.append(cardHtml);
-});
-}
-  function createCriteriaHtml(studentId, q_no) {
+                                <p id="q-total-${student.id}" class="text-2xl font-bold text-indigo-600">0 / 20</p>
+                            </div>
+                            <div class="text-center">
+                                <span class="text-sm text-gray-500">คะแนนเฉลี่ย (ทั้งหมด)</span>
+                                <p id="avg-total-${student.id}" class="text-2xl font-bold text-green-600">0.00 / 20</p>
+                            </div>
+                        </div>
+                        <button class="save-student-btn w-full sm:w-auto px-6 py-3 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700" data-student-id="${student.id}" data-student-name="${student.name}">
+                            💾 บันทึกคะแนนนิสิตคนนี้
+                        </button>
+                    </div>
+                </div>`;
+            container.append(cardHtml);
+        });
+    }
+
+    function createCriteriaHtml(studentId, q_no) {
          const criteria = [
             '1. ตอบคำถามถูกต้องและตรงประเด็น', '2. เลือกใช้ภาษาเหมาะสมกับผู้ถาม เข้าใจง่าย',
             '3. ความน่าเชื่อถือของแหล่งสืบค้น', '4. ความทันสมัย (updated data) และจำนวนเอกสารอ้างอิง'
@@ -170,22 +172,23 @@ container.append(cardHtml);
         criteria.forEach((text, index) => {
             html += `
             <div class="grid grid-cols-3 gap-4 items-center">
-                <label class="font-medium text-gray-700 col-span-2 text-sm"><span class="math-inline">\{text\}</label\>
-                <select class="score-input w-full border-gray-300 rounded-md shadow-sm" data-student-id="{studentId}" data-q-no="qno" data−criteria="{index+1}">
-<option value="" selected>-</option>${[0,1,2,3,4,5].map(s => <option value="${s}">${s}</option>).join('')}
-</select>
-</div>`;
-});
-return html;
-}
-      // --- ส่วนจัดการ Event และการคำนวณคะแนน ---
+                <label class="font-medium text-gray-700 col-span-2 text-sm">${text}</label>
+                <select class="score-input w-full border-gray-300 rounded-md shadow-sm" data-student-id="${studentId}" data-q-no="${q_no}" data-criteria="${index+1}">
+                     <option value="" selected>-</option>${[0,1,2,3,4,5].map(s => `<option value="${s}">${s}</option>`).join('')}
+                </select>
+            </div>`;
+        });
+        return html;
+    }
+
+    // --- ส่วนจัดการ Event และการคำนวณคะแนน ---
     $('#student-list-container').on('click', '.tab-button', function() {
         const studentId = $(this).data('student-id');
         const tabNum = $(this).data('tab');
         $(`#student-${studentId} .tab-button`).removeClass('active-tab').addClass('inactive-tab');
         $(this).removeClass('inactive-tab').addClass('active-tab');
         $(`#student-${studentId} .tab-content`).addClass('hidden');
-        $(`#tab-content-<span class="math-inline">\{studentId\}\-</span>{tabNum}`).removeClass('hidden');
+        $(`#tab-content-${studentId}-${tabNum}`).removeClass('hidden');
         updateScores(studentId);
     });
 
@@ -201,7 +204,7 @@ return html;
             let questionTotal = 0;
             let isGraded = true;
             for(let j=1; j<=4; j++) {
-                const val = $(`#tab-content-<span class="math-inline">\{studentId\}\-</span>{i} select[data-criteria=${j}]`).val();
+                const val = $(`#tab-content-${studentId}-${i} select[data-criteria=${j}]`).val();
                 if(val === ''){
                     isGraded = false;
                 } else {
@@ -217,7 +220,7 @@ return html;
         const activeTab = $(`#student-${studentId} .active-tab`).data('tab');
         let activeQuestionTotal = 0;
          for(let j=1; j<=4; j++) {
-            const val = $(`#tab-content-<span class="math-inline">\{studentId\}\-</span>{activeTab} select[data-criteria=${j}]`).val();
+            const val = $(`#tab-content-${studentId}-${activeTab} select[data-criteria=${j}]`).val();
             if(val !== '') activeQuestionTotal += parseInt(val);
          }
         $(`#q-total-${studentId}`).text(`${activeQuestionTotal} / 20`);
@@ -242,7 +245,7 @@ return html;
         for(let i=1; i<=4; i++) {
             const qScores = { q_no: i };
             for(let j=1; j<=4; j++) {
-                const val = $(`#tab-content-<span class="math-inline">\{studentId\}\-</span>{i} select[data-criteria=${j}]`).val();
+                const val = $(`#tab-content-${studentId}-${i} select[data-criteria=${j}]`).val();
                 if(val === '') {
                     allFieldsFilled = false;
                     break;
@@ -295,4 +298,3 @@ return html;
 </script>
 </body>
 </html>
-```
