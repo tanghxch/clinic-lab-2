@@ -52,13 +52,13 @@
                 <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900">📝 ตอบคำถาม DIS</h5>
                 <p class="font-normal text-gray-700">ประเมินการตอบคำถามทางยา 4 หัวข้อ</p>
             </div>
-             </div>
+        </div>
 
         <div id="dis-grading-page" class="hidden">
-             <button id="back-to-menu" class="text-indigo-600 hover:underline mb-4 inline-block">&larr; กลับหน้าหลัก</button>
-             <h2 class="text-3xl font-bold text-gray-800 mb-6">บันทึกคะแนน: ตอบคำถาม DIS</h2>
-             <div id="student-list-container">
-                </div>
+            <button id="back-to-menu" class="text-indigo-600 hover:underline mb-4 inline-block">&larr; กลับหน้าหลัก</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">บันทึกคะแนน: ตอบคำถาม DIS</h2>
+            <div id="student-list-container">
+            </div>
         </div>
     </div>
 
@@ -68,7 +68,7 @@ $(document).ready(function() {
     // =================================================================
     // !! สำคัญ !! นำ URL ของ GOOGLE APPS SCRIPT มาวางที่นี่
     // =================================================================
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzLsNQJxFbHbOeCNP88IqVO6MG_1qt4oSi6BmDgQ16nZPQE5HjGbbAscXHx64cVQKS-/exec'; 
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzLsNQJxFbHbOeCNP88IqVO6MG_1qt4oSi6BmDgQ16nZPQE5HjGbbAscXHx64cVQKS-/exec';
 
     // --- ส่วนข้อมูล (สามารถเพิ่ม-แก้ไขรายชื่อนิสิตได้ตรงนี้) ---
     let currentInstructor = '';
@@ -164,19 +164,19 @@ $(document).ready(function() {
     }
 
     function createCriteriaHtml(studentId, q_no) {
-         const criteria = [
+        const criteria = [
             '1. ตอบคำถามถูกต้องและตรงประเด็น', '2. เลือกใช้ภาษาเหมาะสมกับผู้ถาม เข้าใจง่าย',
             '3. ความน่าเชื่อถือของแหล่งสืบค้น', '4. ความทันสมัย (updated data) และจำนวนเอกสารอ้างอิง'
         ];
         let html = '';
         criteria.forEach((text, index) => {
             html += `
-            <div class="grid grid-cols-3 gap-4 items-center">
-                <label class="font-medium text-gray-700 col-span-2 text-sm">${text}</label>
-                <select class="score-input w-full border-gray-300 rounded-md shadow-sm" data-student-id="${studentId}" data-q-no="${q_no}" data-criteria="${index+1}">
-                     <option value="" selected>-</option>${[0,1,2,3,4,5].map(s => `<option value="${s}">${s}</option>`).join('')}
-                </select>
-            </div>`;
+                <div class="grid grid-cols-3 gap-4 items-center">
+                    <label class="font-medium text-gray-700 col-span-2 text-sm">${text}</label>
+                    <select class="score-input w-full border-gray-300 rounded-md shadow-sm" data-student-id="${studentId}" data-q-no="${q_no}" data-criteria="${index+1}">
+                        <option value="" selected>-</option>${[0,1,2,3,4,5].map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
+                </div>`;
         });
         return html;
     }
@@ -193,13 +193,12 @@ $(document).ready(function() {
     });
 
     $('#student-list-container').on('change', '.score-input', function() {
-         updateScores($(this).data('student-id'));
+        updateScores($(this).data('student-id'));
     });
     
     function updateScores(studentId) {
         let totalAverage = 0;
         let questionsGraded = 0;
-
         for(let i=1; i<=4; i++) {
             let questionTotal = 0;
             let isGraded = true;
@@ -211,7 +210,7 @@ $(document).ready(function() {
                     questionTotal += parseInt(val);
                 }
             }
-             if(isGraded) {
+            if(isGraded) {
                 totalAverage += questionTotal;
                 questionsGraded++;
             }
@@ -219,10 +218,10 @@ $(document).ready(function() {
         
         const activeTab = $(`#student-${studentId} .active-tab`).data('tab');
         let activeQuestionTotal = 0;
-         for(let j=1; j<=4; j++) {
+        for(let j=1; j<=4; j++) {
             const val = $(`#tab-content-${studentId}-${activeTab} select[data-criteria=${j}]`).val();
             if(val !== '') activeQuestionTotal += parseInt(val);
-         }
+        }
         $(`#q-total-${studentId}`).text(`${activeQuestionTotal} / 20`);
         
         const finalAverage = questionsGraded > 0 ? (totalAverage / questionsGraded).toFixed(2) : '0.00';
